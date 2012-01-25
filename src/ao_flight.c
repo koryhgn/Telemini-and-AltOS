@@ -49,7 +49,9 @@ __pdata uint8_t			ao_flight_force_idle;
  * case of other failures
  */
 
-#define BOOST_TICKS_MAX	AO_SEC_TO_TICKS(15)
+#define DESIRED_AUX_TIME		AO_SEC_TO_TICKS(8)
+
+#define BOOST_TICKS_MAX		AO_SEC_TO_TICKS(15)
 
 /* Landing is detected by getting constant readings from both pressure and accelerometer
  * for a fairly long time (AO_INTERVAL_TICKS)
@@ -218,7 +220,11 @@ ao_flight(void)
 			break;
 #endif
 		case ao_flight_coast:
+			if ((int16_t) (ao_sample_tick - ao_launch_tick) > DESIRED_AUX_TIME) 
+			{
+				ao_ignite(ao_igniter_main);
 
+			} 
 			/* apogee detect: coast to drogue deploy:
 			 *
 			 * speed: < 0
@@ -234,7 +240,7 @@ ao_flight(void)
 				)
 			{
 				/* ignite the drogue charge */
-				ao_ignite(ao_igniter_drogue);
+				/*ao_ignite(ao_igniter_drogue); */
 
 				/* slow down the telemetry system */
 				ao_telemetry_set_interval(AO_TELEMETRY_INTERVAL_RECOVER);
@@ -264,7 +270,7 @@ ao_flight(void)
 			 */
 			if (ao_height <= ao_config.main_deploy)
 			{
-				ao_ignite(ao_igniter_main);
+				/*ao_ignite(ao_igniter_main);*/
 
 				/*
 				 * Start recording min/max height

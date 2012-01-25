@@ -138,7 +138,7 @@ ao_log(void)
 		if ((int16_t) (now - (last_time + ao_log_tiny_interval)) >= 0 && count) {
 			count = sum / count;
 			if (ao_log_started)
-				ao_log_tiny_data(1234);
+				ao_log_tiny_data(count);
 			else
 				ao_log_tiny_queue(count);
 			sum = 0;
